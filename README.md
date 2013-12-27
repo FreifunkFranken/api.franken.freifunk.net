@@ -1,0 +1,2 @@
+api.franken.freifunk.net
+========================
