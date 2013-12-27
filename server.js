@@ -138,7 +138,7 @@ app.get('/node/:id', function(req, res) {
 		}
 		if (data.netmon_response.router === undefined) {
 			return; //_returnError(res, 404, "not_found", data);
-		}run tor relay
+		}
 		
 		router = data.netmon_response.router[0];
 		createResponse(router, interfaces);
