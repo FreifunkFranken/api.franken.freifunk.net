@@ -1,0 +1,83 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<netmon_response>
+	<request>
+		<authentication>1</authentication>
+		<api_key />
+		<method>router</method>
+		<error_code>0</error_code>
+		<error_message />
+	</request>
+	<router>
+		<router_id>165</router_id>
+		<user_id>6</user_id>
+		<hostname>WS13W01Travel</hostname>
+		<description />
+		<location>1. Stock</location>
+		<latitude>49.005252277829</latitude>
+		<longitude>8.393865686867</longitude>
+		<crawl_method>crawler</crawl_method>
+		<create_date>1374319916</create_date>
+		<update_date>1382913219</update_date>
+		<user>
+			<user_id>6</user_id>
+			<nickname>delphiN</nickname>
+			<openid />
+			<firstname>Alexander</firstname>
+			<lastname>Wunschik</lastname>
+			<street />
+			<zipcode>90762</zipcode>
+			<city>Fürth</city>
+			<phonenumber />
+			<email>freifunk@wunschik.net</email>
+			<jabber>delphiN@jabber.ccc.de</jabber>
+			<website>http://www.wunschik.it</website>
+			<description />
+			<notification_method>jabber</notification_method>
+			<permission>8</permission>
+			<activated>0</activated>
+			<create_date>1353101474</create_date>
+			<update_date>-62169987600</update_date>
+		</user>
+		<chipset>
+			<chipset_id>9</chipset_id>
+			<name>Atheros AR9330 rev 1</name>
+			<hardware_name>WR741NDv4</hardware_name>
+			<create_date>1359824142</create_date>
+			<update_date>-62169987600</update_date>
+		</chipset>
+		<statusdata>
+			<status_id>5781470</status_id>
+			<router_id>165</router_id>
+			<crawl_cycle_id>59105</crawl_cycle_id>
+			<status>online</status>
+			<create_date>1384464827</create_date>
+			<hostname>WS13W01Travel</hostname>
+			<client_count>9</client_count>
+			<chipset>Atheros AR9330 rev 1</chipset>
+			<cpu>MIPS 24Kc V7.4</cpu>
+			<memory_total>0</memory_total>
+			<memory_buffering>0</memory_buffering>
+			<memory_caching>0</memory_caching>
+			<memory_free>0</memory_free>
+			<loadavg>0.14</loadavg>
+			<processes>1/42</processes>
+			<uptime>779926.55</uptime>
+			<idletime>681776.85</idletime>
+			<localtime>1384464604</localtime>
+			<distname>OpenWrt</distname>
+			<distversion>Attitude Adjustment</distversion>
+			<openwrt_core_revision>35298</openwrt_core_revision>
+			<openwrt_feeds_packages_revision>35298
+			</openwrt_feeds_packages_revision>
+			<firmware_version>0.4.1</firmware_version>
+			<firmware_revision>build date: Sa 2. Nov 16:56:34 CET 2013
+			</firmware_revision>
+			<kernel_version>3.3.8</kernel_version>
+			<configurator_version />
+			<nodewatcher_version>30</nodewatcher_version>
+			<fastd_version />
+			<batman_advanced_version>2013.4.0</batman_advanced_version>
+		</statusdata>
+	</router>
+</netmon_response>
