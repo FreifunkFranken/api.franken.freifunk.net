@@ -4,6 +4,7 @@ var express = require('express');
 var moment = require('moment');
 var xml2js = require('xml2js');
 var rest = require('restler'); //also requires xml2js
+var async = require('async');
 var app = express();
 
 /**
@@ -47,12 +48,27 @@ function _cleanObject(obj) {
 app.get('/nodes', function(req, res) {
 	var routerlist = null;
 	
-	function createResponse(routerlist) {
-		if (routerlist === null) {
-			return;
+	//TODO use https://github.com/caolan/async#queue
+	
+	async.parallel([
+		function(callback) {
+			rest.get("https://netmon.freifunk-franken.de/api/rest/routerlist/?status=online&limit=9999").on('success', function(data, response) {
+				if (data.netmon_response === undefined) {
+					return; //_returnError(res, 404, "not_found", data);
+				}
+				if (data.netmon_response.routerlist === undefined) {
+					return; //_returnError(res, 404, "not_found", data);
+				}
+				routerlist = data.netmon_response.routerlist[0].router;
+				callback();
+			});
 		}
-		
+	], function(err) {
+		if (err) {
+			throw err;
+		}
 		var nodes = [];
+		console.log(routerlist.length + " node online found: \n");
 		routerlist.forEach(function(item) {
 			console.log("node " + item.router_id[0] + " (" + item.hostname[0] + ")");
 			_cleanObject(item.user[0]);
@@ -82,17 +98,6 @@ app.get('/nodes', function(req, res) {
 			nodes.push(node);
 		});
 		res.json(nodes);
-	}
-	
-	rest.get("https://netmon.freifunk-franken.de/api/rest/routerlist/?status=online&limit=9999").on('success', function(data, response) {
-		if (data.netmon_response === undefined) {
-			return; //_returnError(res, 404, "not_found", data);
-		}
-		if (data.netmon_response.routerlist === undefined) {
-			return; //_returnError(res, 404, "not_found", data);
-		}
-		routerlist = data.netmon_response.routerlist[0].router;
-		createResponse(routerlist);
 	});
 });
 
@@ -104,9 +109,34 @@ app.get('/node/:id', function(req, res) {
 	var router = null;
 	var interfaces = null;
 	
-	function createResponse(router, interfaces) {
-		if ((router === null) /*|| (interfaces === null)*/) {
-			return;
+	async.parallel([
+		function(callback) {
+			rest.get("https://netmon.freifunk-franken.de/api/rest/router/" + req.params.id).on('success', function(data, response) {
+				if (data.netmon_response === undefined) {
+					return; //_returnError(res, 404, "not_found", data);
+				}
+				if (data.netmon_response.router === undefined) {
+					return; //_returnError(res, 404, "not_found", data);
+				}
+				router = data.netmon_response.router[0];
+				callback();
+			});
+		},
+		function(callback) {
+			rest.get("https://netmon.freifunk-franken.de/api/rest/router/" + req.params.id + "/networkinterfacelist/").on('success', function(data, response) {
+				if (data.netmon_response === undefined) {
+					return; // _returnError(res, 404, "not_found", data);
+				}
+				if (data.netmon_response.networkinterfacelist === undefined) {
+					return; //_returnError"Was kann man tun um ein (res, 404, "not_found", data);
+				}
+				interfaces = data.netmon_response.networkinterfacelist[0].networkinterface;
+				callback();
+			});
+		}
+	], function(err) {
+		if (err) {
+			throw err;
 		}
 		
 		/*
@@ -209,34 +239,10 @@ app.get('/node/:id', function(req, res) {
 		};
 		*/
 		
-		if (router.location[0].length>=0) {
-			node.site = router.location[0];
-		}
+		if (router.location[0].length>=0) { node.site = router.location[0]; }
 		
 		res.json(node);
-	}
-	
-	rest.get("https://netmon.freifunk-franken.de/api/rest/router/" + req.params.id).on('success', function(data, response) {
-		if (data.netmon_response === undefined) {
-			return; //_returnError(res, 404, "not_found", data);
-		}
-		if (data.netmon_response.router === undefined) {
-			return; //_returnError(res, 404, "not_found", data);
-		}
-		router = data.netmon_response.router[0];
-		createResponse(router, interfaces);
 	});
-	
-//	rest.get("https://netmon.freifunk-franken.de/api/rest/router/" + req.params.id + "/networkinterfacelist/").on('success', function(data, response) {
-//		if (data.netmon_response === undefined) {
-//			return; // _returnError(res, 404, "not_found", data);
-//		}
-//		if (data.netmon_response.networkinterfacelist === undefined) {
-//			return; //_returnError"Was kann man tun um ein (res, 404, "not_found", data);
-//		}
-//		interfaces = data.netmon_response.networkinterfacelist[0].networkinterface;
-//		createResponse(router, interfaces);
-//	});
 	
 });
 
