@@ -6,6 +6,14 @@ var xml2js = require('xml2js');
 var rest = require('restler'); //also requires xml2js
 var app = express();
 
+/**
+ * TODO
+ * @param res
+ * @param code
+ * @param error
+ * @param reason
+ * @returns error object
+ */
 function _returnError(res, code, error, reason) {
 	var e = {
 		error: error,
@@ -16,12 +24,87 @@ function _returnError(res, code, error, reason) {
 	return e;
 }
 
+/**
+ * cleanup of unnecessary arrays:
+ * key: [ value ] ==> key: value
+ * @param obj
+ * @returns clean object
+ */
+function _cleanObject(obj) {
+	var object = {};
+	for (var key in obj) {
+		var val = obj[key];
+		if (val[0].length>0) {
+			object[key] = val[0];
+		}
+	}
+	return object;
+}
+
+/** **************************************************************************
+ * get all nodes
+ */
+app.get('/nodes', function(req, res) {
+	var routerlist = null;
+	
+	function createResponse(routerlist) {
+		if (routerlist === null) {
+			return;
+		}
+		
+		routerlist.forEach(function(item) {
+			//console.log(item);
+			
+			_cleanObject(item.user[0]);
+			
+			var node = {
+				"api_rev": "1.0",
+				"type": "router",
+				"hostname": item.hostname[0],
+				"ctime" : moment.unix(item.create_date[0]).format(),
+				"mtime" : moment().format(),
+				"lat": item.latitude[0],
+				"lon": item.longitude[0],
+				"community": "Freifunk/Franken",
+				"attributes": {
+					"netmon": {
+						"id": item.router_id[0],
+						"url": "https://netmon.freifunk-franken.de/router.php?router_id=" + item.router_id[0],
+					},
+					"user": _cleanObject(item.user[0]),
+					"chipset": _cleanObject(item.chipset[0]),
+					"statusdata": _cleanObject(item.statusdata[0])
+				}
+			};
+			
+			if (item.description[0].length>0) { node.site = item.description[0]; }
+			
+			res.json(node);
+		});
+	}
+	
+	rest.get("https://netmon.freifunk-franken.de/api/rest/routerlist/?status=online&limit=2").on('success', function(data, response) {
+		if (data.netmon_response === undefined) {
+			return; //_returnError(res, 404, "not_found", data);
+		}
+		if (data.netmon_response.routerlist === undefined) {
+			return; //_returnError(res, 404, "not_found", data);
+		}
+		routerlist = data.netmon_response.routerlist[0].router;
+		createResponse(routerlist);
+	});
+});
+
+
+/** **************************************************************************
+ * get node data by (netmon) id
+ */
 app.get('/node/:id', function(req, res) {
 	var router = null;
 	var interfaces = null;
 	
 	function createResponse(router, interfaces) {
-		if ((router === null) || (interfaces === null)) {
+		if ((router === null) /*|| (interfaces === null)*/) {
 			return;
 		}
 		
@@ -139,21 +222,22 @@ app.get('/node/:id', function(req, res) {
 		if (data.netmon_response.router === undefined) {
 			return; //_returnError(res, 404, "not_found", data);
 		}
-		
 		router = data.netmon_response.router[0];
 		createResponse(router, interfaces);
 	});
 	
-	rest.get("https://netmon.freifunk-franken.de/api/rest/router/" + req.params.id + "/networkinterfacelist/").on('success', function(data, response) {
-		if (data.netmon_response === undefined) {
-			return; // _returnError(res, 404, "not_found", data);
-		}
-		if (data.netmon_response.networkinterfacelist === undefined) {
-			return; //_returnError"Was kann man tun um ein (res, 404, "not_found", data);
-		}
-		interfaces = data.netmon_response.networkinterfacelist[0].networkinterface;
-		createResponse(router, interfaces);
-	});
+//	rest.get("https://netmon.freifunk-franken.de/api/rest/router/" + req.params.id + "/networkinterfacelist/").on('success', function(data, response) {
+//		if (data.netmon_response === undefined) {
+//			return; // _returnError(res, 404, "not_found", data);
+//		}
+//		if (data.netmon_response.networkinterfacelist === undefined) {
+//			return; //_returnError"Was kann man tun um ein (res, 404, "not_found", data);
+//		}
+//		interfaces = data.netmon_response.networkinterfacelist[0].networkinterface;
+//		createResponse(router, interfaces);
+//	});
+	
 });
 
 app.listen(4730);
+
