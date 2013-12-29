@@ -184,7 +184,6 @@ app.get('/node/:id', function(req, res) {
 		res.json(node);
 		console.log("FINISHED delivering node data\n");
 	});
-	
 });
 
 app.listen(9001);
