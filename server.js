@@ -52,9 +52,9 @@ app.get('/nodes', function(req, res) {
 			return;
 		}
 		
+		var nodes = [];
 		routerlist.forEach(function(item) {
-			//console.log(item);
-			
+			console.log("node " + item.router_id[0] + " (" + item.hostname[0] + ")");
 			_cleanObject(item.user[0]);
 			
 			var node = {
@@ -79,11 +79,12 @@ app.get('/nodes', function(req, res) {
 			
 			if (item.description[0].length>0) { node.site = item.description[0]; }
 			
-			res.json(node);
+			nodes.push(node);
 		});
+		res.json(nodes);
 	}
 	
-	rest.get("https://netmon.freifunk-franken.de/api/rest/routerlist/?status=online&limit=2").on('success', function(data, response) {
+	rest.get("https://netmon.freifunk-franken.de/api/rest/routerlist/?status=online&limit=9999").on('success', function(data, response) {
 		if (data.netmon_response === undefined) {
 			return; //_returnError(res, 404, "not_found", data);
 		}
