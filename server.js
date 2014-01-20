@@ -10,7 +10,8 @@ var app = express();
 var settings =  {
 	baseUrl: "https://netmon.freifunk-franken.de",
 	apiMaxParallelRequests: 1, //TODO ask netmon developers what they think is best here; ERROR: Multible request return the same data
-	apiMaxPageLimit: 50
+	apiMaxPageLimit: 50,
+	port: 9001
 }
 
 /**
@@ -186,4 +187,8 @@ app.get('/node/:id', function(req, res) {
 	});
 });
 
-app.listen(9001);
+//IP logging
+//app.use(express.logger());
+
+//start API server
+app.listen(settings.port);
