@@ -77,8 +77,8 @@ function _createRouterNode(router) {
 		"hostname": router.hostname,
 		"ctime" : moment.unix(router.create_date).format(),
 		"mtime" : moment().format(),
-		"lat": router.latitude,
-		"lon": router.longitude,
+		"lat": parseFloat(router.latitude),
+		"lon": parseFloat(router.longitude),
 		"community": "Freifunk/Franken",
 		"attributes": {
 			"netmon": {
@@ -120,9 +120,11 @@ app.get('/nodes', function(req, res) {
 				}
 				//routerlist.push(data.netmon_response.routerlist[0].router);
 				var rs = data.netmon_response.routerlist[0].router;
-				rs.forEach(function(router) {
-					routerlist.push(router);
-				});
+				if (rs !== undefined) {
+					rs.forEach(function(router) {
+						routerlist.push(router);
+					});
+				}
 				callback(offset);
 			} catch (err) {
 				console.error("ERROR: ", err);
@@ -192,3 +194,4 @@ app.get('/node/:id', function(req, res) {
 
 //start API server
 app.listen(settings.port);
+console.log("server started with port:", settings.port);
