@@ -178,6 +178,8 @@ function updateNodes2couchdb() {
 	});
 }
 
+updateNodes2couchdb();
+
 //update every 15n minutes
 setInverval(function(){
 	updateNodes2couchdb();
