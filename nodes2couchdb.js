@@ -52,7 +52,7 @@ var nodes2couchdb = function() {
 //			var routers = [];
 //			routers = require('./nodes.json');
 //			callback(routers);
-			rest.get('http://localhost:9001/nodes/').once('success', function(data, response) {
+			rest.get('http://localhost:9001/nodes?status=online').once('success', function(data, response) {
 				callback(data);
 			});
 		},
