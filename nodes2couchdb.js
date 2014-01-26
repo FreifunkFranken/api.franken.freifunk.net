@@ -124,55 +124,61 @@ var nodes2couchdb = function() {
 	 
 };
 
-var n2c = nodes2couchdb();
-
-n2c.init(function(exists) {
-	if (!exists) return;
-		
-	n2c.getRoutersFromNetmon(function(routers) {
-		if (!routers || routers.length <= 0) 
-			return console.log("ERROR: netmon API returned no routers");
-		
-		
-		function updateRouter(router) {
-			if (!router.hostname || router.hostname.length <= 0) return;
+function updateNodes2couchdb() {
+	var n2c = nodes2couchdb();
+	n2c.init(function(exists) {
+		if (!exists) return;
 			
-			//TODO use getNodesByNetmonId because hostnames could be identical or change
-			n2c.getNodesByHostname(router.hostname, function(doc) {
-				if (doc.length === 1) {
-					//router already exists in the DB
-					
-					//console.log(doc[0]);
-					console.log("router \"" + router.hostname + "\" already exists in the DB");
-					
-					router._rev = doc[0]._rev;
-					delete router.ctime;
-					delete router.id;
-					
-					n2c.updateDocument(doc[0].id, router, function(rev) {
-						console.log("document updated: ", rev);
-					});
-					
-				} else if (doc.length > 1){
-					
-					console.log("WARN: multible routers with the same name found: ", docs);
-					
-				} else {
-					
-					//router does not yet exis in the DB
-					console.log("router \"" + router.hostname + "\" not found");
-					n2c.saveDocument(router, function(id) {
-						console.log("document creaded: ", id);
-					});
-					
-				}
+		n2c.getRoutersFromNetmon(function(routers) {
+			if (!routers || routers.length <= 0) 
+				return console.log("ERROR: netmon API returned no routers");
+			
+			
+			function updateRouter(router) {
+				if (!router.hostname || router.hostname.length <= 0) return;
+				
+				//TODO use getNodesByNetmonId because hostnames could be identical or change
+				n2c.getNodesByHostname(router.hostname, function(doc) {
+					if (doc.length === 1) {
+						//router already exists in the DB
+						
+						//console.log(doc[0]);
+						console.log("router \"" + router.hostname + "\" already exists in the DB");
+						
+						router._rev = doc[0]._rev;
+						delete router.ctime;
+						delete router.id;
+						
+						n2c.updateDocument(doc[0].id, router, function(rev) {
+							console.log("document updated: ", rev);
+						});
+						
+					} else if (doc.length > 1){
+						
+						console.log("WARN: multible routers with the same name found: ", docs);
+						
+					} else {
+						
+						//router does not yet exis in the DB
+						console.log("router \"" + router.hostname + "\" not found");
+						n2c.saveDocument(router, function(id) {
+							console.log("document creaded: ", id);
+						});
+						
+					}
+				});
+			}
+			
+	//		updateRouter(routers[0]);
+			routers.forEach(function(router) {
+				updateRouter(router);
 			});
-		}
-		
-//		updateRouter(routers[0]);
-		routers.forEach(function(router) {
-			updateRouter(router);
 		});
+		
 	});
-	
-});
+}
+
+//update every 15n minutes
+setInverval(function(){
+	updateNodes2couchdb();
+}, 15 * 60000);
