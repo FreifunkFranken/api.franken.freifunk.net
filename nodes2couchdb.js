@@ -181,6 +181,6 @@ function updateNodes2couchdb() {
 updateNodes2couchdb();
 
 //update every 15n minutes
-setInverval(function(){
+setInterval(function(){
 	updateNodes2couchdb();
 }, 15 * 60000);
