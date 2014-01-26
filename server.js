@@ -75,8 +75,8 @@ function _createRouterNode(router) {
 		"api_rev": "1.0",
 		"type": "router",
 		"hostname": router.hostname,
-		"ctime" : moment.unix(router.create_date).format(),
-		"mtime" : moment().format(),
+		"ctime" : moment.unix(router.create_date).utc(),
+		"mtime" : moment().utc(),
 		"lat": parseFloat(router.latitude),
 		"lon": parseFloat(router.longitude),
 		"community": "Freifunk/Franken",
@@ -154,6 +154,8 @@ app.get('/nodes', function(req, res) {
 			queue.push(n);
 			n += settings.apiMaxPageLimit;
 		}
+		var remnant = avlNodeCount-n;
+		if (remnant > 0) queue.push(remnant);
 	});
 });
 
