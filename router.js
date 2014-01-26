@@ -10,8 +10,8 @@ var settings = {
 httpProxy.createServer({
 	hostnameOnly: true,
 	router: {
-		domain + '/' 			: '127.0.0.1:' + settings.libremapWebUi_port,
-		domain + '/netmon/' 	: '127.0.0.1:' + settings.frankenApi_port,
-		domain + '/api/' 		: '127.0.0.1:5984/libremap-dev/_design/libremap-api/_rewrite'
+		settings.domain + '/' 			: '127.0.0.1:' + settings.libremapWebUi_port,
+		settings.domain + '/netmon/' 	: '127.0.0.1:' + settings.frankenApi_port,
+		settings.domain + '/api/' 		: '127.0.0.1:5984/libremap-dev/_design/libremap-api/_rewrite'
 	}
 }).listen(80);
