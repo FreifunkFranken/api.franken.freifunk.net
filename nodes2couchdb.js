@@ -94,7 +94,7 @@ var nodes2couchdb = function() {
 		 * TODO
 		 */
 		getNodesByNetmonId: function(netmonId, callback) {
-			db.view('libremap-api/routers_by_netmon_id', { key: netmonId }, function (err, doc) {
+			db.view('libremap-api/routers_by_netmonid', { key: netmonId }, function (err, doc) {
 				if (err) return showError(err);
 				callback(doc.rows);
 			});
@@ -137,8 +137,8 @@ function updateNodes2couchdb() {
 			function updateRouter(router) {
 				if (!router.hostname || router.hostname.length <= 0) return;
 				
-				//TODO use getNodesByNetmonId because hostnames could be identical or change
-				n2c.getNodesByHostname(router.hostname, function(doc) {
+				//n2c.getNodesByHostname(router.hostname, function(doc) {
+				n2c.getNodesByNetmonId(router.attributes.netmon.id, function(doc) {
 					if (doc.length === 1) {
 						//router already exists in the DB
 						
