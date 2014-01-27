@@ -1,11 +1,12 @@
-var express = require('express');
-var request = require('request');
-var app = express();
+var bouncy = require('bouncy');
 
-app.get('/', function(req, res) {
-	url = 'http://127.0.0.1:9000' + req.url;
-	console.log(url);
-	req.pipe(request(url)).pipe(res);
+var server = bouncy(function (req, res, bounce) {
+	console.log(req.headers);
+	if (req.headers.host === 'libremap.freifunk-franken.de') {
+		bounce(9000);
+	} else {
+		res.statusCode = 404;
+		res.end('no such host');
+	}
 });
-
-app.listen(80);
+server.listen(80);
