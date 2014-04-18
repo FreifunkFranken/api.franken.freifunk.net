@@ -7,16 +7,16 @@ Das Skript kümmert sich automatisch um das pageing und liefert (nach einer ganz
 
 ## Setup ##
 ```
-npm install express moment xml2js restler xml2js async
-node server.js
+/> npm install express moment xml2js restler xml2js async
+/> node server.js
 ```
 
 
 ## Examples ##
 ```
-/node/:netmon-id
-/nodes
-/nodes?status=online
+http://localhost:9001/nodes
+http://localhost:9001/node/:netmon-id
+http://localhost:9001/nodes?status=online
 ```
 
 ## TODO ##
