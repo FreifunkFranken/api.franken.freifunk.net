@@ -24,3 +24,4 @@ http://localhost:9001/nodes?status=online
 * Infos zu den Interfaces fehlt noch
 * Chaching !?
 * API > 1.0 untersützen
+* package.json pflegen
