@@ -4,7 +4,7 @@ var async = require('async');
 
 cradle.setup({
 	host: '95.85.40.145',
-	auth: { username: 'root', password: 'AlexW.9480' },
+	auth: { username: 'root', password: '*******' },
 	cache: false,
 	raw: false,
 	retries: 3,
