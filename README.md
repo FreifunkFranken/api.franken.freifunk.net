@@ -1,10 +1,13 @@
 ###########################################################################################
-!!! DEPRICATED !!! 
-Please use https://github.com/FreifunkFranken/NetmonSync
+ !!! DEPRICATED !!! 
+ 
+ Please use https://github.com/FreifunkFranken/NetmonSync
 ###########################################################################################
 
 
 # api.franken.freifunk.net #
+
+Libremap kompatieble JSON-API basierend auf dem Freifunk-Franken-Netmon.
 
 Das Server-Skript started einen Webserver (Port 9001) der eine Libremap-Kompatieble API bereitstellt.
 Die Datensätze, die diese API bereitstellt können direkt in Libremap gepushed werden.
