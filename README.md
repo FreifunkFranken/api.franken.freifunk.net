@@ -1,3 +1,9 @@
+###########################################################################################
+!!! DEPRICATED !!! 
+Please use https://github.com/FreifunkFranken/NetmonSync
+###########################################################################################
+
+
 # api.franken.freifunk.net #
 
 Das Server-Skript started einen Webserver (Port 9001) der eine Libremap-Kompatieble API bereitstellt.
